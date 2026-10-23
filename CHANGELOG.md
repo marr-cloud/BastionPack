@@ -4,6 +4,8 @@ All notable changes to this modpack are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-23
+
 ### Added
 
 - BastionPack icon (original pixel art): README logo and default `kubejs/config/packicon.png`, with its Aseprite source in `docs/assets/`.
