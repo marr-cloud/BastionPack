@@ -4,6 +4,7 @@
         "pakku-lock.json",
         "config/**",
         "defaultconfigs/**",
+        "kubejs/config/**",
         "kubejs/probe/**",
         ".probe/**",
         "docs/superpowers/**",

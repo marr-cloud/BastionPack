@@ -40,6 +40,8 @@ task setup:prism
 
 This writes `instance.cfg` (including the `PreLaunchCommand` that runs `pakku fetch` before every launch) and `mmc-pack.json` (Minecraft 1.21.1 + NeoForge from the lock) into the instance folder, merging into an existing `instance.cfg`. Open Prism, the instance appears, press Play.
 
+After the first launch, `git status` lists the configs the mods generated under `config/`. They ship to players as overrides, so commit the ones you want to ship (usually the ones you changed). Per-player, machine-specific and secret files, such as KubeJS's `kubejs/config/web_server.json` with its auth token, are already gitignored.
+
 ## 5. Add your first mod
 
 ```sh

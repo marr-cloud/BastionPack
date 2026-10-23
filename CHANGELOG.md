@@ -16,6 +16,8 @@ All notable changes to this modpack are documented here. The format follows [Kee
 - `task server:up` always recreates the container and resyncs the local pack.
 - `task setup:prism` writes `instance.cfg` values escaped the way Prism (Qt) reads them; the pre-launch `pakku fetch` command was being run with its arguments glued together.
 - `task build` runs `pakku fetch` before exporting, so GitHub-hosted mods are no longer silently left out of the `.mrpack`.
+- First-launch files are gitignored: KubeJS's `web_server.json` (holds an auth token), ProbeJS's generated agents and `package.json`, `command_history.txt` and per-player Sodium settings. The template ships `kubejs/startup_scripts/` and `kubejs/client_scripts/` placeholders and KubeJS's default `common.json`/`client.json`, so the first launch no longer generates example scripts.
+- Removed PanPack's pack icon (`kubejs/config/packicon.png`).
 
 ## [0.1.0] - 2026-10-23
 

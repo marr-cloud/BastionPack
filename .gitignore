@@ -40,6 +40,17 @@ server/data/
 !/.vscode/*.code-workspace
 /.vscode/*
 
+# Generated on launch by the game, KubeJS and ProbeJS: per-player, machine-specific or secret
+/command_history.txt
+/coremods/
+# holds the auth token of KubeJS's local web server
+/kubejs/config/web_server.json
+/kubejs/package.json
+/.github/agents/kubejs-*.agent.md
+/config/sodium-options.json
+/config/sodium-fingerprint.json
+/config/spark/tmp-client/
+
 # ProbeJS
 /kubejs/probe/
 /kubejs/config/probejs.json
