@@ -50,7 +50,14 @@ task doctor
 
 Then press Play in Prism (the pre-launch fetch downloads it). `task doctor` cross-checks the mod's side against Modrinth; if it prints a `pakku.json` snippet, apply it ([wrong-mod-side](guides/wrong-mod-side.md)).
 
-## 6. Check, build, release
+## 6. Configure the GitHub repository
+
+Once, in the repository settings:
+
+- Settings, Actions, General, Workflow permissions: tick **Allow GitHub Actions to create and approve pull requests**. Without it the weekly "Mod updates" workflow cannot open its PR ([fix](troubleshooting.md#actions-cannot-create-pull-requests)).
+- Optional secrets and variables for Modrinth, Discord and CurseForge publishing: see [workflows](reference/workflows.md).
+
+## 7. Check, build, release
 
 ```sh
 task check
@@ -69,5 +76,6 @@ The tag triggers the release workflow. For the very first Modrinth upload see [f
 ## Verify it worked
 
 - `task doctor` shows no `error` lines.
+- The workflow permission above is on (Settings, Actions, General).
 - Prism launches the instance to the main menu with your mods.
 - `task build` writes `build/modrinth/<name>-<version>.mrpack`.

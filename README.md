@@ -27,7 +27,7 @@ task init
 task setup:prism
 ```
 
-Open Prism and press Play. Add a mod with `task mods:add -- <slug>`. Full walkthrough: [docs/getting-started.md](docs/getting-started.md).
+Then, in your GitHub repository, tick Settings, Actions, General, **Allow GitHub Actions to create and approve pull requests** so the weekly mod-update PR works. Open Prism and press Play. Add a mod with `task mods:add -- <slug>`. Full walkthrough: [docs/getting-started.md](docs/getting-started.md).
 
 ## Documentation
 

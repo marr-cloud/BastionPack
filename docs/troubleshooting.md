@@ -264,6 +264,14 @@ Each entry is symptom, cause, fix.
 - Cause: wrong project slug/id or bad parameters.
 - Fix: for publishing check `MODRINTH_PROJECT_ID` (the id, not the slug); for `task mods:find` check the query.
 
+## GitHub Actions
+
+### Actions cannot create pull requests
+
+- Symptom: the "Mod updates" workflow fails with `GitHub Actions is not permitted to create or approve pull requests`.
+- Cause: the repository (or organization) workflow permission that lets `GITHUB_TOKEN` open pull requests is off.
+- Fix: Settings, Actions, General, Workflow permissions, tick **Allow GitHub Actions to create and approve pull requests**. If it is greyed out, the organization setting overrides it; ask an owner, or set a `BOT_TOKEN` secret instead. Then re-run "Mod updates"; the `bot/mod-updates` branch is reused.
+
 ## Prism
 
 ### Prism layout
