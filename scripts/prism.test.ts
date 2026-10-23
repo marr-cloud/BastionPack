@@ -9,6 +9,7 @@ import {
     mergeInstanceCfg,
     mmcPackMatches,
     parseMode,
+    qtIniValue,
     renderInstanceCfg,
     renderMmcPack,
     writeInstanceFiles,
@@ -83,7 +84,7 @@ test("renderInstanceCfg has name and prelaunch command", () => {
     assert.match(cfg, /^OverrideCommands=true$/m);
     assert.match(
         cfg,
-        /^PreLaunchCommand="\$INST_JAVA" -jar "\$INST_MC_DIR\/pakku\.jar" --working-path "\$INST_MC_DIR" fetch$/m,
+        /^PreLaunchCommand=\\"\$INST_JAVA\\" -jar \\"\$INST_MC_DIR\/pakku\.jar\\" --working-path \\"\$INST_MC_DIR\\" fetch$/m,
     );
 });
 
@@ -123,7 +124,7 @@ test("existing instance.cfg is merged, not overwritten", () => {
     assert.match(out, /^MaxMemAlloc=6144$/m);
     assert.match(out, /^notes=hi$/m);
     assert.equal(out.match(/^PreLaunchCommand=/gm)?.length, 1);
-    assert.match(out, /^PreLaunchCommand="\$INST_JAVA" -jar "\$INST_MC_DIR\/pakku\.jar"/m);
+    assert.match(out, /^PreLaunchCommand=\\"\$INST_JAVA\\" -jar \\"\$INST_MC_DIR\/pakku\.jar\\"/m);
     assert.equal(out.match(/^InstanceType=/gm)?.length, 1);
     assert.equal(out.match(/^OverrideCommands=true$/gm)?.length, 1);
     assert.equal(out.match(/^name=/gm)?.length, 1);
@@ -139,4 +140,26 @@ test("parseMode accepts setup/sync only", () => {
     assert.equal(parseMode("sync"), "sync");
     assert.throws(() => parseMode(undefined), { name: "BastionError" });
     assert.throws(() => parseMode("wipe"), /setup, sync/);
+});
+
+// Prism reads instance.cfg with Qt's QSettings: a bare '"' starts a quoted span and the
+// spaces around it are dropped, which glued the PreLaunchCommand arguments together.
+test("qtIniValue escapes quotes and backslashes like QSettings", () => {
+    assert.equal(
+        qtIniValue(String.raw`"$INST_JAVA" -jar "$INST_MC_DIR/pakku.jar" fetch`),
+        String.raw`\"$INST_JAVA\" -jar \"$INST_MC_DIR/pakku.jar\" fetch`,
+    );
+    assert.equal(qtIniValue(String.raw`C:\Games\x`), String.raw`C:\\Games\\x`);
+    assert.equal(qtIniValue("Engineer's Tea"), "Engineer's Tea");
+});
+
+test("qtIniValue quotes values QSettings would split or trim", () => {
+    assert.equal(qtIniValue("Tea, Cake"), '"Tea, Cake"');
+    assert.equal(qtIniValue("a;b"), '"a;b"');
+    assert.equal(qtIniValue("a=b"), '"a=b"');
+    assert.equal(qtIniValue(" padded "), '" padded "');
+});
+
+test("renderInstanceCfg escapes the pack name", () => {
+    assert.match(renderInstanceCfg('Tea, "Deluxe"'), /^name="Tea, \\"Deluxe\\""$/m);
 });

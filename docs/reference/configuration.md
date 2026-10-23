@@ -29,6 +29,10 @@ Do not place the same path in two of these (Pakku issue #120).
 
 Pakku issue #141: `!` exclusions in `client_overrides`/`server_overrides` do not apply to paths already included by `overrides`. If you need side-specific KubeJS folders, list each side's folders fully in its own override list instead of excluding.
 
+## Crash Assistant
+
+`config/crash_assistant/config.toml` is shipped with the pack. `task init` sets `modpack_name`, `modpack_creators` and `help_link` (and `formulation_type` for GitHub links). Keep `modpack_creators` non-empty: an empty list makes every player a creator. Commit `config/crash_assistant/modlist.json` after the creator's first launch.
+
 ## Other files
 
 | File           | Purpose                                                                          |

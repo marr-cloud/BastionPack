@@ -166,13 +166,19 @@ export function formatSearchTable(hits: SearchHit[]): string {
         .join("\n");
 }
 
+/** Owner and repo of a GitHub https/ssh remote URL, or null for anything else. */
+export function parseGithubRemote(url: string): { owner: string; repo: string } | null {
+    const m = /github\.com[:/]([^/\s]+)\/([^/\s]+?)(?:\.git)?\s*$/.exec(url.trim());
+    return m ? { owner: m[1]!, repo: m[2]! } : null;
+}
+
 export async function defaultUserAgent(root: string): Promise<string> {
     const fallback = "unknown/unknown (BastionPack)";
     try {
         const r = await run("git", ["remote", "get-url", "origin"], { cwd: root });
         if (r.code !== 0) return fallback;
-        const m = /github\.com[:/]([^/\s]+)\/([^/\s]+?)(?:\.git)?\s*$/.exec(r.stdout.trim());
-        return m ? `${m[1]}/${m[2]} (BastionPack)` : fallback;
+        const gh = parseGithubRemote(r.stdout);
+        return gh ? `${gh.owner}/${gh.repo} (BastionPack)` : fallback;
     } catch {
         return fallback;
     }

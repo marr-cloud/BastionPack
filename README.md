@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/assets/bastionpack-icon.png" alt="BastionPack icon: a blackstone keep with a gold-framed gate" width="128"></p>
+
 # BastionPack
 
 A Minecraft 1.21.1 NeoForge modpack template for packdevs who publish on **Modrinth**. Reliable, robust, easy to troubleshoot: when something goes wrong, the tooling says what happened and links to the fix.

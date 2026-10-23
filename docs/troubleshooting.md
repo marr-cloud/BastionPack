@@ -116,6 +116,18 @@ Each entry is symptom, cause, fix.
 - Cause: the same path in both places makes Pakku's export pick a winner unpredictably (Pakku issue #120).
 - Fix: keep the file in one place only. See [configuration](reference/configuration.md).
 
+### Crash Assistant creators
+
+- Symptom: `task doctor` warns that Crash Assistant `modpack_creators` is empty or CHANGE_ME.
+- Cause: the shipped placeholder was never replaced. With an empty list the mod adds whoever launches the game as a creator, which breaks the added/removed mods diff in crash reports.
+- Fix: run `task init`, or put your Minecraft nickname in `modpack_creators` in `config/crash_assistant/config.toml`.
+
+### Crash Assistant help link
+
+- Symptom: `task doctor` warns that Crash Assistant `help_link` is CHANGE_ME.
+- Cause: the placeholder was never replaced, so the help button opens the NeoForge Discord instead of your support page.
+- Fix: run `task init`, or set `help_link` (starting with `https://`) in `config/crash_assistant/config.toml`.
+
 ### Doctor check failed
 
 - Symptom: `task doctor` reports `<name> check failed` or `check skipped`.
@@ -127,7 +139,7 @@ Each entry is symptom, cause, fix.
 ### Export failed
 
 - Symptom: `pakku … failed` during build, or `pakku export finished but produced no .mrpack`.
-- Cause: Pakku could not export (bad `pakku.json`, missing files, network).
+- Cause: Pakku could not fetch or export (bad `pakku.json`, missing files, network). `task build` runs `pakku fetch` first, because export silently drops GitHub-hosted mods whose jars were never downloaded.
 - Fix: read the Pakku output above the error, run `task doctor`, then `task build`.
 
 ### Version detect

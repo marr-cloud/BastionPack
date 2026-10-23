@@ -11,6 +11,8 @@ KubeJS here runs **JavaScript only** (Rhino), not TypeScript. Scripts live in `k
 3. Open the repository root in VS Code. Put `// @ts-check` at the top of a script for type hints.
 4. Optional: `task check:types` type-checks scripts against the typings (needs `.probe/`).
 
+The dump also writes VS Code Copilot agents to `.github/agents/kubejs-*.agent.md`. They use the ProbeJS VS Code extension and are regenerated on every dump, so they are gitignored.
+
 `task check` lints scripts with oxlint, including the example rule `bastion/no-empty-recipe-remove` (never call `event.remove({})` with no filter).
 
 ## Optional compat pattern
