@@ -22,6 +22,8 @@ export interface EnsurePakkuOptions {
     sha256: string;
     dest: string;
     fetchImpl?: typeof fetch;
+    /** Abort a stalled download after this many ms (default 120 s). */
+    timeoutMs?: number;
 }
 
 export async function ensurePakku(opts: EnsurePakkuOptions): Promise<"present" | "downloaded"> {
@@ -30,7 +32,7 @@ export async function ensurePakku(opts: EnsurePakkuOptions): Promise<"present" |
     const part = `${opts.dest}.part`;
     const doFetch = opts.fetchImpl ?? fetch;
     try {
-        const res = await doFetch(url);
+        const res = await doFetch(url, { signal: AbortSignal.timeout(opts.timeoutMs ?? 120_000) });
         if (!res.ok) {
             throw new BastionError(`Failed to download Pakku (HTTP ${res.status})`, {
                 hint: `check your network and that ${url} exists`,
@@ -49,6 +51,12 @@ export async function ensurePakku(opts: EnsurePakkuOptions): Promise<"present" |
     } catch (e) {
         await rm(part, { force: true });
         if (e instanceof BastionError) throw e;
+        if (e instanceof Error && (e.name === "TimeoutError" || e.name === "AbortError")) {
+            throw new BastionError("Downloading Pakku timed out", {
+                hint: "check your network connection and retry `task setup`",
+                docs: "docs/troubleshooting.md#pakku-download",
+            });
+        }
         throw new BastionError(`Failed to download Pakku: ${(e as Error).message}`, {
             hint: `check your network connection and retry \`task setup\``,
             docs: "docs/troubleshooting.md#pakku-download",

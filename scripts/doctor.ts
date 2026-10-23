@@ -1,6 +1,5 @@
 import { existsSync, readdirSync } from "node:fs";
 import { join, matchesGlob } from "node:path";
-import { pathToFileURL } from "node:url";
 import { BastionError, main } from "./lib/errors.ts";
 import { run } from "./lib/exec.ts";
 import { parseJavaMajor } from "./lib/java.ts";
@@ -139,11 +138,11 @@ async function toolChecks(root: string): Promise<Finding[]> {
     );
     const node = Number(process.versions.node.split(".")[0]);
     out.push(
-        node >= 24
+        node >= 26
             ? { level: "ok", message: `Node ${process.versions.node}` }
             : {
                   level: "error",
-                  message: `Node 24+ required (found ${process.versions.node}); run \`mise install\``,
+                  message: `Node 26+ required (found ${process.versions.node}); run \`mise install\``,
                   docs: `${TS}#node-version`,
               },
     );
@@ -155,7 +154,7 @@ async function toolChecks(root: string): Promise<Finding[]> {
                 : {
                       level: "error",
                       message: `${tool} not found on PATH; run \`mise install\``,
-                      docs: `${TS}#missing-tool`,
+                      docs: `${TS}#tool-missing`,
                   },
         );
     }
@@ -281,7 +280,7 @@ export function formatFinding(f: Finding): string {
     return `${MARK[f.level]} ${f.message}${f.docs ? `\n    docs: ${f.docs}` : ""}`;
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
+if (import.meta.main) {
     main(async () => {
         const findings = await runDoctor(repoRoot());
         for (const f of findings) console.log(formatFinding(f));

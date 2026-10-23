@@ -1,6 +1,5 @@
 import { copyFileSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { pathToFileURL } from "node:url";
 import { BastionError, main } from "./lib/errors.ts";
 import { readLock } from "./lib/lock.ts";
 import { createModrinthClient, defaultUserAgent, formatSearchTable } from "./lib/modrinth.ts";
@@ -99,7 +98,7 @@ export async function changeMods(
     }
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
+if (import.meta.main) {
     main(async () => {
         const { cmd, rest } = parseModsArgs(process.argv.slice(2));
         const root = repoRoot();

@@ -1,7 +1,6 @@
 import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { createInterface } from "node:readline/promises";
-import { pathToFileURL } from "node:url";
 import { freshChangelog } from "./lib/changelog.ts";
 import { BastionError, main } from "./lib/errors.ts";
 import { readConfig, writeConfig } from "./lib/lock.ts";
@@ -100,7 +99,7 @@ export function applyInit(root: string, a: InitAnswers, opts: { force?: boolean 
             const eol = env.includes("\r\n") ? "\r\n" : "\n";
             const lines = env.split(/\r?\n/);
             const example = `# MODRINTH_MODPACK=${a.modrinthSlug}`;
-            const i = lines.findIndex((l) => l.startsWith("MODRINTH_MODPACK="));
+            const i = lines.findIndex((l) => /^#?\s*MODRINTH_MODPACK=/.test(l));
             if (i !== -1 && lines[i + 1] !== example) {
                 lines.splice(i + 1, 0, example);
                 writeFileSync(envFile, lines.join(eol));
@@ -175,7 +174,7 @@ async function collect(args: InitArgs): Promise<InitAnswers> {
     }
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
+if (import.meta.main) {
     main(async () => {
         const args = parseInitArgs(process.argv.slice(2));
         const root = repoRoot();

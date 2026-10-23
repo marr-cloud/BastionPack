@@ -7,7 +7,6 @@ import {
     writeFileSync,
 } from "node:fs";
 import { join } from "node:path";
-import { pathToFileURL } from "node:url";
 import { BastionError, main } from "./lib/errors.ts";
 import { run, type RunResult } from "./lib/exec.ts";
 import { readConfig } from "./lib/lock.ts";
@@ -115,7 +114,7 @@ export async function safeLockDiff(
     }
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
+if (import.meta.main) {
     main(async () => {
         const root = repoRoot();
         const index = await readMrpackIndex(findMrpack(root));

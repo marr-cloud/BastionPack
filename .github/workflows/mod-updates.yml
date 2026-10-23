@@ -100,6 +100,7 @@ jobs:
                   } > build/pr-body.md
 
             - name: Open or update pull request
+              id: pr
               if: steps.changes.outputs.changed == 'true'
               uses: peter-evans/create-pull-request@v8.1.1
               with:
@@ -112,3 +113,7 @@ jobs:
                       pakku-lock.json
                       pakku.json
                   delete-branch: true
+
+            - name: Explain pull request failure
+              if: failure() && steps.pr.outcome == 'failure'
+              run: echo "::error::Could not open the PR; see docs/troubleshooting.md#actions-cannot-create-pull-requests"

@@ -65,7 +65,7 @@ test("applyInit rewrites everything for a name with spaces and apostrophe", () =
     assert.match(readme, /docs\/getting-started\.md/);
     const env = read("server/.env.example");
     assert.match(env, /^# MODRINTH_MODPACK=engineers-tea$/m);
-    assert.match(env, /^MODRINTH_MODPACK=\/modpacks\//m);
+    assert.match(env, /^# MODRINTH_MODPACK=\/modpacks\//m);
 });
 
 test("without a slug the README has no Modrinth link and .env.example is untouched", () => {

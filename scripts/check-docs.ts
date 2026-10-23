@@ -1,6 +1,5 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
 import { BastionError, main } from "./lib/errors.ts";
 import { run } from "./lib/exec.ts";
 import { repoRoot } from "./lib/paths.ts";
@@ -166,7 +165,7 @@ function markdownFiles(root: string): string[] {
     return files;
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (import.meta.main) {
     main(async () => {
         const root = repoRoot();
         const files = markdownFiles(root);
@@ -180,7 +179,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
         if (list.code !== 0) {
             throw new BastionError("`task --list-all --json` failed", {
                 hint: list.stderr.trim() || "is go-task installed? run `mise install`",
-                docs: `${TROUBLESHOOTING}#missing-tool`,
+                docs: `${TROUBLESHOOTING}#tool-missing`,
             });
         }
         const names = (JSON.parse(list.stdout) as { tasks: { name: string }[] }).tasks.map(

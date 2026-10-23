@@ -37,11 +37,12 @@ test("writeConfig emits Pakku's own format: 4-space indent, no trailing newline"
     assert.ok(text.includes('\n    "name"'));
 });
 
-test("readLock reports a Modrinth 1.21.1 NeoForge pack", () => {
+test("readLock reads the shape of the live lock", () => {
+    // Shape only: packs legitimately change target, Minecraft version and loader.
     const lock = readLock(repoRoot());
-    assert.equal(lock.target, "modrinth");
-    assert.equal(lock.mc_versions[0], "1.21.1");
-    assert.ok("neoforge" in lock.loaders);
+    assert.ok(["modrinth", "curseforge", "multiplatform"].includes(lock.target));
+    assert.ok(lock.mc_versions.length > 0);
+    assert.ok(Object.keys(lock.loaders).length > 0);
     assert.ok(lock.projects.length > 0);
 });
 

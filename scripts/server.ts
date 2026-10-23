@@ -18,6 +18,15 @@ export function composeArgs(root: string, rest: string[]): string[] {
     ];
 }
 
+/** A rebuilt local pack can keep its filename (same commit), so local runs always recreate and resync. */
+export function upPlan(
+    cmd: "up" | "update",
+    local: boolean,
+): { args: string[]; forceSync: boolean } {
+    const force = cmd === "update" || local;
+    return { args: ["up", "-d", ...(force ? ["--force-recreate"] : [])], forceSync: force };
+}
+
 function requireEnv(root: string): void {
     if (!existsSync(join(root, "server", ".env"))) {
         throw new BastionError("server/.env not found", {
@@ -69,15 +78,10 @@ if (import.meta.main) {
                     await build(root);
                     env["MODRINTH_MODPACK"] = `/modpacks/${basename(findMrpack(root))}`;
                 }
-                if (cmd === "update") {
-                    env["MODRINTH_FORCE_SYNCHRONIZE"] = "true";
-                    await compose(root, ["pull"], env);
-                }
-                await compose(
-                    root,
-                    ["up", "-d", ...(cmd === "update" ? ["--force-recreate"] : [])],
-                    env,
-                );
+                const plan = upPlan(cmd, local);
+                if (plan.forceSync) env["MODRINTH_FORCE_SYNCHRONIZE"] = "true";
+                if (cmd === "update") await compose(root, ["pull"], env);
+                await compose(root, plan.args, env);
                 break;
             }
             case "down":

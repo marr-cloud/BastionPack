@@ -6,7 +6,7 @@ vars:
 
 tasks:
     setup:
-        desc: Download the pinned Pakku, fetch mods and enable git hooks
+        desc: Install npm deps, download the pinned Pakku, fetch mods and enable git hooks
         env:
             PAKKU_VERSION: "{{.PAKKU_VERSION}}"
             PAKKU_SHA256: "{{.PAKKU_SHA256}}"
@@ -111,7 +111,7 @@ tasks:
             - node scripts/publish-modrinth.ts {{.CLI_ARGS}}
 
     server:up:
-        desc: Build the dev pack and start the local server + playit (needs server/.env; SERVER_USE_ENV_PACK=true skips the local build)
+        desc: Build the dev pack and start the local server + playit (needs server/.env; task server:up SERVER_USE_ENV_PACK=true skips the local build)
         env:
             SERVER_USE_ENV_PACK: "{{.SERVER_USE_ENV_PACK}}"
         cmds:

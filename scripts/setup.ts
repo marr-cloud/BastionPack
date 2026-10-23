@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { BastionError, main } from "./lib/errors.ts";
 import { run } from "./lib/exec.ts";
+import { installDependencies } from "./lib/install.ts";
 import { parseJavaMajor } from "./lib/java.ts";
 import { ensurePakku, pakku } from "./lib/pakku.ts";
 import { repoRoot } from "./lib/paths.ts";
@@ -28,6 +29,9 @@ main(async () => {
         });
     }
     console.log(`java: ${major}`);
+
+    await installDependencies(root);
+    console.log("pnpm install: ok");
 
     const version = requireEnv("PAKKU_VERSION");
     const state = await ensurePakku({

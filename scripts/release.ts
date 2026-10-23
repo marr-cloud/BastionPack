@@ -1,6 +1,5 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { pathToFileURL } from "node:url";
 import { promoteUnreleased, validateRelease } from "./lib/changelog.ts";
 import { BastionError, main } from "./lib/errors.ts";
 import { run, type RunResult } from "./lib/exec.ts";
@@ -36,6 +35,26 @@ async function step(
         hint: `${state} ${recovery}`,
         docs: GIT_FAILED,
     });
+}
+
+const USAGE = "usage: task release -- x.y.z";
+
+/** The only accepted argument is the version; anything else must not start a release. */
+export function parseReleaseArgs(args: string[]): string {
+    const [version, ...extra] = args;
+    if (!version) {
+        throw new BastionError("Missing version", {
+            hint: USAGE,
+            docs: "docs/troubleshooting.md#invalid-version",
+        });
+    }
+    if (extra.length > 0) {
+        throw new BastionError(`Unknown argument: ${extra[0]}`, {
+            hint: USAGE,
+            docs: "docs/troubleshooting.md#invalid-version",
+        });
+    }
+    return version;
 }
 
 export async function release(
@@ -104,15 +123,8 @@ export async function release(
     console.log(`Released ${version}; CI will build and publish from the tag.`);
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
+if (import.meta.main) {
     main(async () => {
-        const version = process.argv[2];
-        if (!version) {
-            throw new BastionError("Missing version", {
-                hint: "usage: task release -- x.y.z",
-                docs: "docs/troubleshooting.md#invalid-version",
-            });
-        }
-        await release(repoRoot(), version);
+        await release(repoRoot(), parseReleaseArgs(process.argv.slice(2)));
     });
 }

@@ -4,14 +4,14 @@ Use this when you need the exact name or arguments of a command. `task --list` i
 
 ## Setup
 
-| Task                 | Does                                                                                                      |
-| -------------------- | --------------------------------------------------------------------------------------------------------- |
-| `task setup`         | Download the pinned Pakku (checksum verified), fetch mods, enable git hooks. Idempotent.                  |
-| `task init`          | Turn the template into your pack. Flags: `--name N --author A --description D --modrinth-slug S --force`. |
-| `task doctor`        | Diagnose tools, `pakku.jar`, Prism sync, mod sides, duplicate overrides. Each finding links to the docs.  |
-| `task hooks:install` | Enable the repo git hooks (`.githooks`).                                                                  |
-| `task setup:prism`   | Write `instance.cfg` and `mmc-pack.json` for the Prism instance. Close Prism first.                       |
-| `task prism:sync`    | Rewrite only `mmc-pack.json` from `pakku-lock.json` after a Minecraft or NeoForge bump.                   |
+| Task                 | Does                                                                                                               |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `task setup`         | Install npm dependencies, download the pinned Pakku (checksum verified), fetch mods, enable git hooks. Idempotent. |
+| `task init`          | Turn the template into your pack. Flags: `--name N --author A --description D --modrinth-slug S --force`.          |
+| `task doctor`        | Diagnose tools, `pakku.jar`, Prism sync, mod sides, duplicate overrides. Each finding links to the docs.           |
+| `task hooks:install` | Enable the repo git hooks (`.githooks`).                                                                           |
+| `task setup:prism`   | Write `instance.cfg` and `mmc-pack.json` for the Prism instance. Close Prism first.                                |
+| `task prism:sync`    | Rewrite only `mmc-pack.json` from `pakku-lock.json` after a Minecraft or NeoForge bump.                            |
 
 ## Mods
 

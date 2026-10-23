@@ -4,6 +4,7 @@ import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "no
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, test } from "node:test";
+import { BastionError } from "./errors.ts";
 import { ensurePakku, verifySha256 } from "./pakku.ts";
 
 const bytes = Buffer.from("fake pakku jar contents");
@@ -68,4 +69,20 @@ test("HTTP failure throws BastionError without leaving files", async () => {
     const failing = (async () => new Response("no", { status: 404 })) as unknown as typeof fetch;
     await assert.rejects(ensurePakku({ ...opts, fetchImpl: failing }), /download/i);
     assert.equal(existsSync(opts.dest + ".part"), false);
+});
+
+test("ensurePakku maps a stalled download to a timeout error and leaves no .part", async () => {
+    opts.timeoutMs = 20;
+    opts.fetchImpl = ((_url: string, init?: RequestInit) =>
+        new Promise((_resolve, reject) => {
+            init?.signal?.addEventListener("abort", () => reject(init.signal?.reason));
+        })) as unknown as typeof fetch;
+    await assert.rejects(
+        ensurePakku(opts),
+        (e: unknown) =>
+            e instanceof BastionError &&
+            /timed out/.test(e.message) &&
+            e.docs === "docs/troubleshooting.md#pakku-download",
+    );
+    assert.ok(!existsSync(`${opts.dest}.part`));
 });

@@ -1,6 +1,5 @@
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
-import { pathToFileURL } from "node:url";
 import { BastionError, main } from "./lib/errors.ts";
 import { readConfig, readLock, type PakkuLock } from "./lib/lock.ts";
 import { repoRoot } from "./lib/paths.ts";
@@ -183,7 +182,7 @@ export function setupPrism(root: string, mode: "setup" | "sync"): string {
     return layout.instanceDir;
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
+if (import.meta.main) {
     await main(async () => {
         const mode = parseMode(process.argv[2]);
         console.log("Close Prism before running this: it rewrites instance.cfg on exit.");

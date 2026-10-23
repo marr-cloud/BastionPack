@@ -112,16 +112,22 @@ test("existing version rejects without creating", async () => {
 
 test("missing token or project id is skipped", async () => {
     const { client, calls } = fakeClient();
+    const logs: string[] = [];
     const o = {
         mrpack: "/nonexistent.mrpack",
         version: "1.0.0",
         dryRun: false,
         client,
         changelog: "x",
+        log: (m: string) => logs.push(m),
     };
     assert.equal((await publishModrinth({ ...o, projectId: "A" })).status, "skipped");
     assert.equal((await publishModrinth({ ...o, projectId: "", token: "t" })).status, "skipped");
     assert.equal(calls.create, 0);
+    assert.deepEqual(logs, [
+        "Skipping Modrinth publish: MODRINTH_TOKEN not set",
+        "Skipping Modrinth publish: MODRINTH_PROJECT_ID not set",
+    ]);
 });
 
 test("publishes multipart with data and file part", async () => {
@@ -161,6 +167,7 @@ test("refuses a real publish when the built pack version differs", async () => {
 
 test("skipExisting returns skipped instead of throwing when the version exists", async () => {
     const { client, calls } = fakeClient(["1.0.0-beta.2"]);
+    const logs: string[] = [];
     const r = await publishModrinth({
         mrpack: makeMrpack(),
         version: "1.0.0-beta.2",
@@ -170,9 +177,11 @@ test("skipExisting returns skipped instead of throwing when the version exists",
         skipExisting: true,
         client,
         changelog: "x",
+        log: (m) => logs.push(m),
     });
     assert.deepEqual(r, { status: "skipped" });
     assert.equal(calls.create, 0);
+    assert.deepEqual(logs, ["version 1.0.0-beta.2 already on Modrinth — skipping"]);
 });
 
 test("skipExisting still publishes when the version is new", async () => {

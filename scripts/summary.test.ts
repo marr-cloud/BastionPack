@@ -8,7 +8,7 @@ import { BastionError } from "./lib/errors.ts";
 
 const base = {
     name: "BastionPack",
-    version: "1.4.0-dev+abc1234",
+    version: "1.4.0+dev.abc1234",
     mc: "1.21.1",
     loader: "neoforge",
 };
@@ -22,7 +22,7 @@ test("first build line when diff is null", () => {
 test("includes pack facts and mod count", () => {
     const md = renderSummary({ ...base, modCount: 42, diff: null });
     assert.match(md, /BastionPack/);
-    assert.match(md, /1\.4\.0-dev\+abc1234/);
+    assert.match(md, /1\.4\.0\+dev\.abc1234/);
     assert.match(md, /1\.21\.1/);
     assert.match(md, /neoforge/);
     assert.match(md, /\b42\b/);

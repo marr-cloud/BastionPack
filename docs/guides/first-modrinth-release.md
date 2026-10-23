@@ -15,22 +15,25 @@ New Modrinth projects are reviewed manually, which can take days. Until approved
     MODRINTH_PROJECT_ID=...
     ```
 
-## Upload the first version locally
+## Release 0.1.0, then upload it locally
 
-Do the first real upload by hand so you can see it work:
+Do the first release in this order, so 0.1.0 gets a tag, a GitHub Release and a changelog section, and the first Modrinth upload is one you watch:
 
-```sh
-task build VERSION=0.1.0
-task publish:modrinth -- --version 0.1.0 --dry-run
-task publish:modrinth -- --version 0.1.0
-```
+1. Tag the release: `task release -- 0.1.0` (from `main`, clean tree, non-empty `## [Unreleased]`). CI builds and creates the GitHub Release. It skips Modrinth because the secrets do not exist yet.
+2. Upload by hand so you can see it work:
 
-`--dry-run` validates the `.mrpack` and prints what would be sent. The command refuses a version that already exists on the project.
+    ```sh
+    task build VERSION=0.1.0
+    task publish:modrinth -- --version 0.1.0 --dry-run
+    task publish:modrinth -- --version 0.1.0
+    ```
+
+    `--dry-run` validates the `.mrpack` and prints what would be sent. The command refuses a version that already exists on the project.
 
 ## Then automate
 
 1. Repo settings, Secrets and variables, Actions: add secret `MODRINTH_TOKEN` and variable `MODRINTH_PROJECT_ID`.
-2. Release with `task release -- 0.2.0` (from `main`, clean tree, non-empty `## [Unreleased]`). The tag runs the release workflow: build, server smoke test, GitHub Release, Modrinth upload with `--skip-existing`. See [workflows](../reference/workflows.md).
+2. From 0.2.0 on, `task release -- 0.2.0` is enough. The tag runs the release workflow: build, server smoke test, GitHub Release, Modrinth upload with `--skip-existing`. See [workflows](../reference/workflows.md).
 
 If the upload step fails, the GitHub Release still exists; re-run the job, or see [troubleshooting](../troubleshooting.md#publish-failed).
 

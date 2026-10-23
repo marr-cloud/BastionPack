@@ -9,7 +9,7 @@ Guide for AI coding agents (and humans) working in this repository. BastionPack 
 | `pakku.json`                 | Hand-edited pack config (name, overrides, per-mod `side`).                                                                  |
 | `pakku-lock.json`            | Generated mod list. **Never edit by hand.**                                                                                 |
 | `Taskfile.yml`               | The single entry point; also pins Pakku (`PAKKU_VERSION`, `PAKKU_SHA256`).                                                  |
-| `scripts/`                   | Node 24 TypeScript (run natively, erasable syntax, `.ts` imports) behind the tasks. Tests are `*.test.ts` next to the code. |
+| `scripts/`                   | Node 26 TypeScript (run natively, erasable syntax, `.ts` imports) behind the tasks. Tests are `*.test.ts` next to the code. |
 | `kubejs/`                    | KubeJS scripts (JavaScript only).                                                                                           |
 | `config/`, `defaultconfigs/` | Mod configs shipped as overrides.                                                                                           |
 | `.pakku/`                    | Pakku overrides (`overrides/`, `client-overrides/`, `server-overrides/`) and `prism-overrides/` (not exported).             |
