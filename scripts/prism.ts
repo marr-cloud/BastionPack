@@ -66,6 +66,16 @@ export function renderMmcPack(lock: PakkuLock): object {
 }
 
 /**
+ * Encodes a value the way Qt's QSettings writes INI strings, which is how Prism reads
+ * instance.cfg: '\' and '"' are backslash-escaped, and values with ',', ';', '=' or edge
+ * whitespace are wrapped in quotes. A bare '"' would start a quoted span instead.
+ */
+export function qtIniValue(value: string): string {
+    const escaped = value.replace(/[\\"]/g, (c) => `\\${c}`);
+    return /[,;=]|^\s|\s$/.test(value) ? `"${escaped}"` : escaped;
+}
+
+/**
  * Prism substitutes $INST_* before running. Absolute paths plus --working-path make the
  * command independent of Prism's working directory (Pakku otherwise searches cwd upward
  * for pakku.json).
@@ -79,8 +89,8 @@ export function renderInstanceCfg(name: string): string {
     }
     return [
         "[General]",
-        `name=${name}`,
-        'PreLaunchCommand="$INST_JAVA" -jar "$INST_MC_DIR/pakku.jar" --working-path "$INST_MC_DIR" fetch',
+        `name=${qtIniValue(name)}`,
+        `PreLaunchCommand=${qtIniValue('"$INST_JAVA" -jar "$INST_MC_DIR/pakku.jar" --working-path "$INST_MC_DIR" fetch')}`,
         "ConfigVersion=1.2",
         "InstanceType=OneSix",
         "OverrideCommands=true",

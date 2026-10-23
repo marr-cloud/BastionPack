@@ -13,6 +13,7 @@ All notable changes to this modpack are documented here. The format follows [Kee
 - Scripts no longer silently do nothing when the repo is reached through a symlink or junction.
 - `task setup` now installs npm dependencies; `task release` rejects extra arguments; stalled Pakku downloads time out.
 - `task server:up` always recreates the container and resyncs the local pack.
+- `task setup:prism` writes `instance.cfg` values escaped the way Prism (Qt) reads them; the pre-launch `pakku fetch` command was being run with its arguments glued together.
 
 ## [0.1.0] - 2026-10-23
 
