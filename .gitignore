@@ -33,7 +33,7 @@ pakku.jar
 # dotenv
 .env
 server/.env
-server/data/
+server/backups/
 .probe/
 
 # VSCode

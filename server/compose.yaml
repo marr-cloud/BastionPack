@@ -15,7 +15,9 @@ services:
             MODRINTH_EXCLUDE_FILES: ${MODRINTH_EXCLUDE_FILES:-}
             MODRINTH_FORCE_SYNCHRONIZE: ${MODRINTH_FORCE_SYNCHRONIZE:-false}
         volumes:
-            - ./data:/data
+            # A named volume, not a bind mount: on Docker Desktop for Windows a bind mount makes the
+            # NeoForge install and every world save cross the Windows/Linux boundary (minutes, not seconds).
+            - minecraft-data:/data
             - ../build/modrinth:/modpacks:ro
         ports:
             - "25565:25565"
@@ -31,3 +33,6 @@ services:
             SECRET_KEY: ${PLAYIT_SECRET_KEY}
         depends_on:
             - minecraft
+
+volumes:
+    minecraft-data:
