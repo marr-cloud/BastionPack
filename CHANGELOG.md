@@ -4,6 +4,10 @@ All notable changes to this modpack are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- Crash Assistant ships configured for the pack: `task init` asks for creator nicknames and a help link, and `task doctor` warns while they are still `CHANGE_ME`.
+
 ### Changed
 
 - Guide `mod-not-on-modrinth`: new verified path for mods published as GitHub Releases (for example a fork of ProjectE).

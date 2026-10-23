@@ -20,6 +20,10 @@ Give the game at least 4 GB of RAM (6 GB for bigger packs). Java 21 is bundled b
 
 Purely visual or UI mods that run only on your side are safe to add yourself in the launcher: minimaps, shader support, cosmetic or tooltip mods. Mods that add blocks, items, mobs or recipes must also be on the server, so do not add those. If unsure, ask the host. Remove the extra mods before reporting a bug.
 
+## If the game crashes
+
+The Crash Assistant window opens after a crash. Click **Upload all**, then the help button, and paste the copied message where the pack asks for support.
+
 ## Verify it worked
 
 You reach the main menu with the pack's version shown, and the server list shows the server as online with a matching version.

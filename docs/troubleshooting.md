@@ -116,6 +116,18 @@ Each entry is symptom, cause, fix.
 - Cause: the same path in both places makes Pakku's export pick a winner unpredictably (Pakku issue #120).
 - Fix: keep the file in one place only. See [configuration](reference/configuration.md).
 
+### Crash Assistant creators
+
+- Symptom: `task doctor` warns that Crash Assistant `modpack_creators` is empty or CHANGE_ME.
+- Cause: the shipped placeholder was never replaced. With an empty list the mod adds whoever launches the game as a creator, which breaks the added/removed mods diff in crash reports.
+- Fix: run `task init`, or put your Minecraft nickname in `modpack_creators` in `config/crash_assistant/config.toml`.
+
+### Crash Assistant help link
+
+- Symptom: `task doctor` warns that Crash Assistant `help_link` is CHANGE_ME.
+- Cause: the placeholder was never replaced, so the help button opens the NeoForge Discord instead of your support page.
+- Fix: run `task init`, or set `help_link` (starting with `https://`) in `config/crash_assistant/config.toml`.
+
 ### Doctor check failed
 
 - Symptom: `task doctor` reports `<name> check failed` or `check skipped`.
