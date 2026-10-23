@@ -71,12 +71,14 @@ export async function publishModrinth(o: {
     skipExisting?: boolean;
     client: ModrinthClient;
     changelog: string;
+    /** Where notices go; defaults to console (workflow commands under GitHub Actions). */
+    log?: (msg: string) => void;
 }): Promise<{ status: "dry-run" | "published" | "skipped"; versionId?: string }> {
     if (!o.dryRun && (!o.token || !o.projectId)) {
         const missing = [!o.token && "MODRINTH_TOKEN", !o.projectId && "MODRINTH_PROJECT_ID"]
             .filter(Boolean)
             .join(" and ");
-        notice(`Skipping Modrinth publish: ${missing} not set`);
+        (o.log ?? notice)(`Skipping Modrinth publish: ${missing} not set`);
         return { status: "skipped" };
     }
     if (!isSemver(o.version)) {
@@ -107,7 +109,7 @@ export async function publishModrinth(o: {
         const existing = await o.client.listVersions(o.projectId);
         if (existing.some((v) => v.version_number === o.version)) {
             if (o.skipExisting) {
-                notice(`version ${o.version} already on Modrinth — skipping`);
+                (o.log ?? notice)(`version ${o.version} already on Modrinth — skipping`);
                 return { status: "skipped" };
             }
             throw new BastionError(`version ${o.version} already exists on Modrinth`, {
