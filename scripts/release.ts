@@ -37,6 +37,26 @@ async function step(
     });
 }
 
+const USAGE = "usage: task release -- x.y.z";
+
+/** The only accepted argument is the version; anything else must not start a release. */
+export function parseReleaseArgs(args: string[]): string {
+    const [version, ...extra] = args;
+    if (!version) {
+        throw new BastionError("Missing version", {
+            hint: USAGE,
+            docs: "docs/troubleshooting.md#invalid-version",
+        });
+    }
+    if (extra.length > 0) {
+        throw new BastionError(`Unknown argument: ${extra[0]}`, {
+            hint: USAGE,
+            docs: "docs/troubleshooting.md#invalid-version",
+        });
+    }
+    return version;
+}
+
 export async function release(
     root: string,
     version: string,
@@ -105,13 +125,6 @@ export async function release(
 
 if (import.meta.main) {
     main(async () => {
-        const version = process.argv[2];
-        if (!version) {
-            throw new BastionError("Missing version", {
-                hint: "usage: task release -- x.y.z",
-                docs: "docs/troubleshooting.md#invalid-version",
-            });
-        }
-        await release(repoRoot(), version);
+        await release(repoRoot(), parseReleaseArgs(process.argv.slice(2)));
     });
 }

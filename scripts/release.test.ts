@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { run } from "./lib/exec.ts";
-import { release } from "./release.ts";
+import { parseReleaseArgs, release } from "./release.ts";
 
 const g = (cwd: string, ...args: string[]) =>
     execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
@@ -122,4 +122,10 @@ test("release explains recovery when the commit fails", async () => {
         assert.match(err.hint, /git restore --staged --worktree CHANGELOG\.md/);
         return true;
     });
+});
+
+test("parseReleaseArgs accepts exactly one version and rejects extra arguments", () => {
+    assert.equal(parseReleaseArgs(["0.2.0"]), "0.2.0");
+    assert.throws(() => parseReleaseArgs([]), /Missing version/);
+    assert.throws(() => parseReleaseArgs(["0.2.0", "--dry-run"]), /Unknown argument: --dry-run/);
 });
