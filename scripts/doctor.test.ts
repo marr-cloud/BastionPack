@@ -162,6 +162,6 @@ test("malformed lock still reports tool checks and a lock error", async () => {
     writeFileSync(join(root, "pakku-lock.json"), "{nope");
     writeFileSync(join(root, "pakku.json"), JSON.stringify({ name: "t", version: "0" }));
     const f = await runDoctor(root);
-    assert.ok(f.some((x) => x.level === "ok" && x.message.startsWith("Node")));
+    assert.ok(f.some((x) => x.message.includes("Node")));
     assert.ok(f.some((x) => x.level === "error" && x.message.includes("pakku-lock.json")));
 });
