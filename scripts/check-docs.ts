@@ -179,7 +179,7 @@ if (import.meta.main) {
         if (list.code !== 0) {
             throw new BastionError("`task --list-all --json` failed", {
                 hint: list.stderr.trim() || "is go-task installed? run `mise install`",
-                docs: `${TROUBLESHOOTING}#missing-tool`,
+                docs: `${TROUBLESHOOTING}#tool-missing`,
             });
         }
         const names = (JSON.parse(list.stdout) as { tasks: { name: string }[] }).tasks.map(

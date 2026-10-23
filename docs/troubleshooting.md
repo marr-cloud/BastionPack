@@ -8,15 +8,9 @@ Each entry is symptom, cause, fix.
 
 ### Tool missing
 
-- Symptom: `<tool> was not found` or `<tool> not found on PATH`.
+- Symptom: `<tool> was not found`, `<tool> not found on PATH`, or `task --list-all --json` failed during `task check`.
 - Cause: a required program (java, node, pnpm, task, git, docker) is not installed or not on `PATH`.
 - Fix: run `mise install` in the repo (the toolchain is pinned in `mise.toml`), open a new terminal, then `task doctor`. Docker is separate: install Docker Desktop for the `server:` tasks.
-
-### Missing tool
-
-- Symptom: `<tool> not found on PATH` from `task doctor`, or `task --list-all --json` failed during `task check`.
-- Cause: a required program is not installed or not on `PATH` (same cause as [tool missing](#tool-missing)).
-- Fix: `mise install`, open a new terminal, `task doctor`.
 
 ### Java version
 
@@ -29,6 +23,12 @@ Each entry is symptom, cause, fix.
 - Symptom: `Node 26+ required`.
 - Cause: the scripts run TypeScript directly through Node 26.
 - Fix: `mise install`, new terminal, `task doctor`.
+
+### Pnpm install
+
+- Symptom: `pnpm install failed` during `task setup`.
+- Cause: no network, a registry outage, or `pnpm-lock.yaml` out of sync with `package.json`.
+- Fix: read the pnpm output above, check your network, and re-run `task setup`. If the lockfile is out of sync, run `pnpm install` once and commit `pnpm-lock.yaml`.
 
 ### Setup env
 

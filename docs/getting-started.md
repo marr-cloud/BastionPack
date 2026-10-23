@@ -20,7 +20,7 @@ mise install
 task setup
 ```
 
-`task setup` downloads the pinned Pakku (checksum verified), fetches the mods and enables the git hook. It is safe to re-run.
+`task setup` runs `pnpm install --frozen-lockfile`, downloads the pinned Pakku (checksum verified), fetches the mods and enables the git hook. It is safe to re-run.
 
 ## 3. Make it yours
 

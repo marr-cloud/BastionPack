@@ -154,7 +154,7 @@ async function toolChecks(root: string): Promise<Finding[]> {
                 : {
                       level: "error",
                       message: `${tool} not found on PATH; run \`mise install\``,
-                      docs: `${TS}#missing-tool`,
+                      docs: `${TS}#tool-missing`,
                   },
         );
     }
