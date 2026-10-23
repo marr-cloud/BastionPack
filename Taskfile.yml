@@ -3,6 +3,8 @@ version: "3"
 vars:
     PAKKU_VERSION: "1.5.0"
     PAKKU_SHA256: "4fdbd8423698b59d19d71195dcde1b65da6432b6d67ea38fc74aefd9062aa201"
+    AUTHLIB_VERSION: "1.2.8"
+    AUTHLIB_SHA256: "9c7f4343e6c82034958ffb48c14a2cb0c85928be7283103ce17da00c6d5a7b10"
 
 tasks:
     setup:
@@ -114,6 +116,8 @@ tasks:
         desc: Build the dev pack and start the local server + playit (needs server/.env; task server:up SERVER_USE_ENV_PACK=true skips the local build)
         env:
             SERVER_USE_ENV_PACK: "{{.SERVER_USE_ENV_PACK}}"
+            AUTHLIB_VERSION: "{{.AUTHLIB_VERSION}}"
+            AUTHLIB_SHA256: "{{.AUTHLIB_SHA256}}"
         cmds:
             - node scripts/server.ts up
 
@@ -131,6 +135,8 @@ tasks:
         desc: Pull images and recreate the server with a forced modpack resync
         env:
             SERVER_USE_ENV_PACK: "{{.SERVER_USE_ENV_PACK}}"
+            AUTHLIB_VERSION: "{{.AUTHLIB_VERSION}}"
+            AUTHLIB_SHA256: "{{.AUTHLIB_SHA256}}"
         cmds:
             - node scripts/server.ts update
 

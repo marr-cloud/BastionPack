@@ -42,13 +42,13 @@ Use this when you need the exact name or arguments of a command. `task --list` i
 
 ## Local server
 
-| Task                 | Does                                                                                       |
-| -------------------- | ------------------------------------------------------------------------------------------ |
-| `task server:up`     | Build the dev pack and start server + playit (`SERVER_USE_ENV_PACK=true` skips the build). |
-| `task server:down`   | Stop them.                                                                                 |
-| `task server:logs`   | Follow the logs.                                                                           |
-| `task server:update` | Pull images and force a modpack resync.                                                    |
-| `task server:smoke`  | Boot a throwaway server from the built `.mrpack` and wait for the ready line.              |
+| Task                 | Does                                                                                                                                                             |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `task server:up`     | Build the dev pack and start server + playit (`SERVER_USE_ENV_PACK=true` skips the build; `AUTH_SERVER` in `server/.env` enables Ely.by and other auth servers). |
+| `task server:down`   | Stop them.                                                                                                                                                       |
+| `task server:logs`   | Follow the logs.                                                                                                                                                 |
+| `task server:update` | Pull images and force a modpack resync.                                                                                                                          |
+| `task server:smoke`  | Boot a throwaway server from the built `.mrpack` and wait for the ready line.                                                                                    |
 
 ## Verify it worked
 

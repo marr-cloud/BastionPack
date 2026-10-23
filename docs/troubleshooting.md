@@ -318,6 +318,30 @@ Each entry is symptom, cause, fix.
 - Cause: it is gitignored and must be created.
 - Fix: copy `server/.env.example` to `server/.env` and set `PLAYIT_SECRET_KEY`.
 
+### Failed to verify username
+
+- Symptom: the player sees "Failed to verify username!" and the server log says `tried to join with an invalid session`.
+- Cause: the launcher and the server use different auth servers, typically an Ely.by launcher against a server that checks Mojang.
+- Fix: set `AUTH_SERVER=ely.by` in `server/.env` and run `task server:up`. See [Ely.by and other auth servers](guides/local-server-docker.md#elyby-and-other-auth-servers).
+
+### Auth server invalid
+
+- Symptom: `AUTH_SERVER in server/.env is not valid`.
+- Cause: the value has spaces or quotes, is not a hostname, or is a URL that does not start with `https://`.
+- Fix: use a value like `ely.by` or `https://auth.example.com/api/yggdrasil`.
+
+### Authlib download
+
+- Symptom: `Failed to download authlib-injector`, or `AUTHLIB_VERSION / AUTHLIB_SHA256 are not set`.
+- Cause: no network or GitHub unreachable; or the script was run without the Taskfile pins.
+- Fix: check the connection and retry `task server:up` (do not call `scripts/server.ts` directly).
+
+### Authlib checksum
+
+- Symptom: `authlib-injector.jar checksum mismatch`.
+- Cause: a corrupted download, or the release asset no longer matches `AUTHLIB_SHA256`.
+- Fix: retry `task server:up`. If it persists, verify the asset and update `AUTHLIB_VERSION` and `AUTHLIB_SHA256` together in `Taskfile.yml`.
+
 ### Server usage
 
 - Symptom: `Unknown server command`.

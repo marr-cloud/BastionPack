@@ -1,11 +1,80 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
+import { mkdir } from "node:fs/promises";
 import { basename, join } from "node:path";
+import { downloadVerified } from "./lib/download.ts";
 import { BastionError, main } from "./lib/errors.ts";
 import { run } from "./lib/exec.ts";
 import { repoRoot } from "./lib/paths.ts";
 import { findMrpack } from "./publish-modrinth.ts";
 
 const DOCS = "docs/troubleshooting.md";
+const AUTHLIB_JAR = "authlib-injector.jar";
+
+/** Reads one `KEY=value` from dotenv text (comments and blank lines ignored, optional quotes stripped). */
+export function parseEnvValue(text: string, key: string): string {
+    for (const raw of text.split(/\r?\n/)) {
+        const line = raw.trim();
+        if (!line || line.startsWith("#")) continue;
+        const eq = line.indexOf("=");
+        if (eq < 0 || line.slice(0, eq).trim() !== key) continue;
+        let v = line.slice(eq + 1).trim();
+        if (v.length >= 2 && (v[0] === '"' || v[0] === "'") && v.endsWith(v[0])) v = v.slice(1, -1);
+        return v;
+    }
+    return "";
+}
+
+const HOSTNAME =
+    /^[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?)*$/;
+
+/** AUTH_SERVER ends up in a JVM flag: only a hostname or an https:// URL without spaces or quotes. */
+export function validateAuthServer(value: string): string {
+    const ok = value.startsWith("https://")
+        ? value.length > 8 && !/[\s"'`\\]/.test(value)
+        : HOSTNAME.test(value);
+    if (!ok) {
+        throw new BastionError("AUTH_SERVER in server/.env is not valid", {
+            hint: "use a hostname such as ely.by, or an https:// URL, with no spaces or quotes",
+            docs: `${DOCS}#auth-server-invalid`,
+        });
+    }
+    return value;
+}
+
+export function authJvmOpts(authServer: string): string {
+    return authServer ? `-javaagent:/authlib/${AUTHLIB_JAR}=${authServer}` : "";
+}
+
+/** Makes sure build/authlib exists (compose mounts it) and, for a custom auth server, holds the pinned jar. */
+async function prepareAuthlib(root: string): Promise<string> {
+    const authServer = validateAuthServer(
+        parseEnvValue(readFileSync(join(root, "server", ".env"), "utf8"), "AUTH_SERVER"),
+    );
+    const dir = join(root, "build", "authlib");
+    await mkdir(dir, { recursive: true });
+    if (!authServer) return "";
+    const version = process.env["AUTHLIB_VERSION"];
+    const sha256 = process.env["AUTHLIB_SHA256"];
+    if (!version || !sha256) {
+        throw new BastionError("AUTHLIB_VERSION / AUTHLIB_SHA256 are not set", {
+            hint: "run through `task server:up` so the Taskfile pins are passed in",
+            docs: `${DOCS}#authlib-download`,
+        });
+    }
+    await downloadVerified({
+        url: `https://github.com/yushijinhun/authlib-injector/releases/download/v${version}/authlib-injector-${version}.jar`,
+        dest: join(dir, AUTHLIB_JAR),
+        sha256,
+        label: "authlib-injector",
+        fileName: AUTHLIB_JAR,
+        retryHint: "check your network connection and retry `task server:up`",
+        checksumHint:
+            "retry `task server:up`; if it persists the release asset changed — check AUTHLIB_SHA256",
+        downloadDocs: `${DOCS}#authlib-download`,
+        checksumDocs: `${DOCS}#authlib-checksum`,
+    });
+    return authJvmOpts(authServer);
+}
 
 export function composeArgs(root: string, rest: string[]): string[] {
     return [
@@ -74,6 +143,7 @@ if (import.meta.main) {
                 // Local mode: always serve the freshly built pack. A published slug in .env is used by `update`.
                 const local = process.env["SERVER_USE_ENV_PACK"] !== "true";
                 const env: NodeJS.ProcessEnv = {};
+                env["AUTH_JVM_OPTS"] = await prepareAuthlib(root);
                 if (local) {
                     await build(root);
                     env["MODRINTH_MODPACK"] = `/modpacks/${basename(findMrpack(root))}`;

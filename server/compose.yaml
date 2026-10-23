@@ -14,11 +14,14 @@ services:
             MODRINTH_VERSION: ${MODRINTH_VERSION:-}
             MODRINTH_EXCLUDE_FILES: ${MODRINTH_EXCLUDE_FILES:-}
             MODRINTH_FORCE_SYNCHRONIZE: ${MODRINTH_FORCE_SYNCHRONIZE:-false}
+            # authlib-injector agent for Ely.by and other auth servers; empty = Mojang (see AUTH_SERVER in .env).
+            JVM_OPTS: ${AUTH_JVM_OPTS:-}
         volumes:
             # A named volume, not a bind mount: on Docker Desktop for Windows a bind mount makes the
             # NeoForge install and every world save cross the Windows/Linux boundary (minutes, not seconds).
             - minecraft-data:/data
             - ../build/modrinth:/modpacks:ro
+            - ../build/authlib:/authlib:ro
         ports:
             - "25565:25565"
         tty: true
