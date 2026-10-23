@@ -1,4 +1,4 @@
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join, matchesGlob } from "node:path";
 import { BastionError, main } from "./lib/errors.ts";
 import { run } from "./lib/exec.ts";
@@ -112,6 +112,49 @@ export function checkConfigProjects(lock: PakkuLock, config: PakkuConfig): Findi
             message: `pakku.json projects."${k}" matches no mod in pakku-lock.json (stale entry?)`,
             docs: `${TS}#stale-config-project`,
         }));
+}
+
+const CA_CONFIG = "config/crash_assistant/config.toml";
+
+/** Reads just help_link and modpack_creators from Crash Assistant's config (one value per line). */
+export function parseCrashAssistantConfig(text: string): {
+    helpLink?: string;
+    creators?: string[];
+} {
+    const strings = (s: string) =>
+        [...s.matchAll(/"((?:[^"\\]|\\.)*)"/g)].map((m) => m[1]!.replace(/\\(.)/g, "$1"));
+    const out: { helpLink?: string; creators?: string[] } = {};
+    for (const line of text.split(/\r?\n/)) {
+        const link = /^\s*help_link\s*=\s*(.*)$/.exec(line);
+        if (link) out.helpLink = strings(link[1]!)[0] ?? "";
+        const creators = /^\s*modpack_creators\s*=\s*(.*)$/.exec(line);
+        if (creators) out.creators = strings(creators[1]!);
+    }
+    return out;
+}
+
+export function checkCrashAssistant(root: string, lock: PakkuLock): Finding[] {
+    const file = join(root, CA_CONFIG);
+    if (!lock.projects.some((p) => p.slug["modrinth"] === "crash-assistant")) return [];
+    if (!existsSync(file)) return [];
+    const cfg = parseCrashAssistantConfig(readFileSync(file, "utf8"));
+    const fix = `run \`task init\`, or edit ${CA_CONFIG}`;
+    const findings: Finding[] = [];
+    if (!cfg.creators?.length || cfg.creators.includes("CHANGE_ME")) {
+        findings.push({
+            level: "warn",
+            message: `Crash Assistant modpack_creators is empty or CHANGE_ME, so crash reports cannot diff against the pack's mod list (${fix})`,
+            docs: `${TS}#crash-assistant-creators`,
+        });
+    }
+    if (cfg.helpLink === "CHANGE_ME") {
+        findings.push({
+            level: "warn",
+            message: `Crash Assistant help_link is CHANGE_ME, so its help button opens the NeoForge Discord (${fix})`,
+            docs: `${TS}#crash-assistant-help-link`,
+        });
+    }
+    return findings;
 }
 
 async function toolOutput(cmd: string, args: string[]): Promise<string | null> {
@@ -254,6 +297,7 @@ export async function runDoctor(root: string): Promise<Finding[]> {
     const l = lock;
     const c = config;
     findings.push(...(await safe("config projects", () => checkConfigProjects(l, c))));
+    findings.push(...(await safe("Crash Assistant", () => checkCrashAssistant(root, l))));
 
     const ids = l.projects
         .map((p) => p.id["modrinth"] ?? p.slug["modrinth"])

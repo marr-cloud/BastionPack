@@ -50,6 +50,10 @@ server/data/
 /config/sodium-options.json
 /config/sodium-fingerprint.json
 /config/spark/tmp-client/
+# Crash Assistant examples, regenerated when missing
+/config/crash_assistant/scripts/log_analysis/example.jexl
+/config/crash_assistant/scripts/startup/example.jexl
+/config/crash_assistant/crash_assistant_localization_overrides/README.md
 
 # ProbeJS
 /kubejs/probe/

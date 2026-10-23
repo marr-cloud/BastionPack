@@ -13,7 +13,9 @@ import { join } from "node:path";
 import { afterEach, beforeEach, test } from "node:test";
 import { BastionError } from "./lib/errors.ts";
 import { freshChangelog } from "./lib/changelog.ts";
-import { applyInit, parseInitArgs } from "./init.ts";
+import { applyInit, defaultHelpLink, parseInitArgs } from "./init.ts";
+import { parseGithubRemote } from "./lib/modrinth.ts";
+import { run } from "./lib/exec.ts";
 
 const real = join(import.meta.dirname, "..");
 let root: string;
@@ -25,6 +27,7 @@ beforeEach(() => {
         "README.md",
         ".pakku/prism-overrides/instance.cfg",
         "server/.env.example",
+        "config/crash_assistant/config.toml",
     ]) {
         mkdirSync(join(root, f, ".."), { recursive: true });
         cpSync(join(real, f), join(root, f));
@@ -40,6 +43,8 @@ const answers = {
     author: "Ann",
     description: 'A "cozy" pack',
     modrinthSlug: "engineers-tea",
+    creators: "Ann_1, bob",
+    helpLink: "https://github.com/ann/engineers-tea/issues",
 };
 const read = (f: string) => readFileSync(join(root, f), "utf8");
 
@@ -70,7 +75,7 @@ test("applyInit rewrites everything for a name with spaces and apostrophe", () =
 
 test("without a slug the README has no Modrinth link and .env.example is untouched", () => {
     const before = read("server/.env.example");
-    applyInit(root, { name: "Plain", author: "A", description: "d" });
+    applyInit(root, { name: "Plain", author: "A", description: "d", creators: "Ann" });
     assert.doesNotMatch(read("README.md"), /modrinth\.com\/modpack/);
     assert.equal(read("server/.env.example"), before);
 });
@@ -93,6 +98,12 @@ test("invalid answers are rejected before touching anything", () => {
         { name: "a\nb" },
         { author: "" },
         { modrinthSlug: "Bad Slug" },
+        { creators: "" },
+        { creators: "ok_name, no" },
+        { creators: "bad name" },
+        { creators: "Ann," },
+        { helpLink: "http://example.com" },
+        { helpLink: "https://exa mple.com" },
     ]) {
         assert.throws(() => applyInit(root, { ...answers, ...bad }), BastionError);
     }
@@ -110,9 +121,20 @@ test("parseInitArgs reads flags", () => {
             "D",
             "--modrinth-slug",
             "s",
+            "--creators",
+            "Ann,bob",
+            "--help-link=https://x.dev/help",
             "--force",
         ]),
-        { name: "N", author: "A", description: "D", modrinthSlug: "s", force: true },
+        {
+            name: "N",
+            author: "A",
+            description: "D",
+            modrinthSlug: "s",
+            creators: "Ann,bob",
+            helpLink: "https://x.dev/help",
+            force: true,
+        },
     );
     assert.throws(() => parseInitArgs(["--bogus"]), BastionError);
     assert.throws(() => parseInitArgs(["--name"]), BastionError);
@@ -128,4 +150,67 @@ test("a failed write leaves pakku.json untouched and the repo re-runnable", () =
     mkdirSync(join(root, ".pakku/prism-overrides"), { recursive: true });
     applyInit(root, answers);
     assert.equal(JSON.parse(read("pakku.json")).name, "Engineer's Tea");
+});
+
+const ca = "config/crash_assistant/config.toml";
+const KEYS = /^\s*(help_link|formulation_type|modpack_name|modpack_creators) =/;
+
+test("Crash Assistant config gets creators, link and GitHub wording; the rest is untouched", () => {
+    const before = read(ca);
+    applyInit(root, answers);
+    const after = read(ca);
+    assert.match(after, /^\thelp_link = "https:\/\/github\.com\/ann\/engineers-tea\/issues"\r?$/m);
+    assert.match(after, /^\tformulation_type = "GITHUB"\r?$/m);
+    assert.match(after, /^\tmodpack_name = "Engineer's Tea"\r?$/m);
+    assert.match(after, /^\tmodpack_creators = \["Ann_1", "bob"\]\r?$/m);
+    const rest = (s: string) => s.split("\n").filter((l) => !KEYS.test(l));
+    assert.deepEqual(rest(after), rest(before));
+});
+
+test("Crash Assistant: other links keep DISCORD, values are escaped, no link keeps the placeholder", () => {
+    applyInit(root, {
+        ...answers,
+        name: String.raw`Say "hi" \o/`,
+        helpLink: "https://discord.gg/abc",
+    });
+    const a = read(ca);
+    assert.match(a, /^\thelp_link = "https:\/\/discord\.gg\/abc"\r?$/m);
+    assert.match(a, /^\tformulation_type = "DISCORD"\r?$/m);
+    assert.ok(a.includes("\tmodpack_name = " + String.raw`"Say \"hi\" \\o/"`));
+
+    const { helpLink: _drop, ...noLink } = answers;
+    cpSync(join(real, ca), join(root, ca));
+    applyInit(root, noLink, { force: true });
+    assert.match(read(ca), /^\thelp_link = "CHANGE_ME"\r?$/m);
+});
+
+test("a missing Crash Assistant config is skipped", () => {
+    rmSync(join(root, ca));
+    applyInit(root, answers);
+    assert.equal(existsSync(join(root, ca)), false);
+    assert.equal(JSON.parse(read("pakku.json")).name, "Engineer's Tea");
+});
+
+test("invalid creators leave the Crash Assistant config untouched", () => {
+    const before = read(ca);
+    assert.throws(() => applyInit(root, { ...answers, creators: "x" }), BastionError);
+    assert.equal(read(ca), before);
+});
+
+test("parseGithubRemote handles https and ssh remotes", () => {
+    assert.deepEqual(parseGithubRemote("https://github.com/ann/pack.git\n"), {
+        owner: "ann",
+        repo: "pack",
+    });
+    assert.deepEqual(parseGithubRemote("git@github.com:ann/pack"), { owner: "ann", repo: "pack" });
+    assert.equal(parseGithubRemote("https://gitlab.com/ann/pack"), null);
+});
+
+test("defaultHelpLink derives the issues URL from a GitHub origin", async () => {
+    await run("git", ["init", "-q"], { cwd: root });
+    assert.equal(await defaultHelpLink(root), undefined);
+    await run("git", ["remote", "add", "origin", "git@github.com:ann/pack.git"], { cwd: root });
+    assert.equal(await defaultHelpLink(root), "https://github.com/ann/pack/issues");
+    await run("git", ["remote", "set-url", "origin", "https://example.com/x/y.git"], { cwd: root });
+    assert.equal(await defaultHelpLink(root), undefined);
 });
