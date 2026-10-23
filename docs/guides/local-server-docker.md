@@ -29,8 +29,20 @@ task server:logs
 Other commands:
 
 - `task server:update`: pull images and force a modpack resync after a new build.
-- `task server:down`: stop everything (the world in `server/data/` stays).
+- `task server:down`: stop everything. The world stays in the Docker volume `bastionpack_minecraft-data`.
 - `task server:smoke`: boot a throwaway server from the built `.mrpack` and wait for the ready line (this is the CI check).
+
+## World data and backups
+
+The server keeps `/data` (world, configs, installed mods) in the named volume `bastionpack_minecraft-data`, not in a folder of the repo. A bind mount from Windows makes the NeoForge install and world saves very slow on Docker Desktop.
+
+Copy the world out (works while the server runs; stop it first for a consistent copy):
+
+```sh
+docker compose -f server/compose.yaml cp minecraft:/data/world server/backups/world
+```
+
+Start over with a fresh world: `task server:down`, then `docker volume rm bastionpack_minecraft-data`.
 
 `MODRINTH_EXCLUDE_FILES` (comma-separated jar names) is a fallback to skip a file on the server. Prefer fixing the mod's `side` ([wrong-mod-side](wrong-mod-side.md)).
 

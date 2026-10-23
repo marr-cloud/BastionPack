@@ -16,6 +16,7 @@ All notable changes to this modpack are documented here. The format follows [Kee
 
 ### Fixed
 
+- The local server keeps `/data` in a named Docker volume instead of a bind mount; on Docker Desktop for Windows the bind mount made the NeoForge install take many minutes. The server guide covers backups.
 - Scripts no longer silently do nothing when the repo is reached through a symlink or junction.
 - `task setup` now installs npm dependencies; `task release` rejects extra arguments; stalled Pakku downloads time out.
 - `task server:up` always recreates the container and resyncs the local pack.
