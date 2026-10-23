@@ -10,6 +10,8 @@ Use this when a player cannot join the server: "mod mismatch", "missing mods", "
 4. **Server did not pick up the new pack.** `task server:update` pulls images and forces a modpack resync.
 5. **Timeout / cannot reach.** The server is not running (`task server:logs`), or the playit tunnel is down or points to the wrong local address. It must be `minecraft:25565` ([local-server-docker](local-server-docker.md)).
 
+6. **"Failed to verify username" with an Ely.by (or other third-party) account.** The server checks sessions against Mojang unless told otherwise. Set `AUTH_SERVER`: [troubleshooting](../troubleshooting.md#failed-to-verify-username).
+
 ## Verify it worked
 
 The player joins, and `task server:logs` shows the join line without errors.

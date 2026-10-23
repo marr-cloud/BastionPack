@@ -46,6 +46,16 @@ Start over with a fresh world: `task server:down`, then `docker volume rm bastio
 
 `MODRINTH_EXCLUDE_FILES` (comma-separated jar names) is a fallback to skip a file on the server. Prefer fixing the mod's `side` ([wrong-mod-side](wrong-mod-side.md)).
 
+## Ely.by and other auth servers
+
+Use this when players log in with Ely.by (or another authlib-injector / Yggdrasil account system) and get "Failed to verify username". A launcher that injects authlib-injector into the client is not enough: the server checks every session itself, and by default it asks Mojang.
+
+1. In `server/.env` set `AUTH_SERVER=ely.by` (or an `https://` Yggdrasil API URL).
+2. Run `task server:up`. It downloads the pinned authlib-injector into `build/authlib/` (checked against `AUTHLIB_SHA256` in `Taskfile.yml`) and starts the server with it.
+3. `task server:logs` shows `Authentication server: https://ely.by`.
+
+Everyone must then use an account of that auth server; Mojang/Microsoft accounts are rejected. Leave `AUTH_SERVER` empty to go back to Mojang.
+
 ## Verify it worked
 
 `task server:logs` shows `Done (...)! For help, type "help"`, and a player joins through the playit address. If not, see [server-rejects-connection](server-rejects-connection.md) and [troubleshooting](../troubleshooting.md#docker-missing).
