@@ -1,6 +1,5 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
 import { BastionError, main } from "./lib/errors.ts";
 import { run } from "./lib/exec.ts";
 import { repoRoot } from "./lib/paths.ts";
@@ -166,7 +165,7 @@ function markdownFiles(root: string): string[] {
     return files;
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (import.meta.main) {
     main(async () => {
         const root = repoRoot();
         const files = markdownFiles(root);

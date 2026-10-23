@@ -1,6 +1,5 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { basename, join } from "node:path";
-import { pathToFileURL } from "node:url";
 import { extractSection } from "./lib/changelog.ts";
 import { BastionError, main } from "./lib/errors.ts";
 import { run } from "./lib/exec.ts";
@@ -193,7 +192,7 @@ function parseArgs(argv: string[]): {
     return { dryRun, skipExisting, version };
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
+if (import.meta.main) {
     main(async () => {
         const root = repoRoot();
         const args = parseArgs(process.argv.slice(2));

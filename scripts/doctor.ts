@@ -1,6 +1,5 @@
 import { existsSync, readdirSync } from "node:fs";
 import { join, matchesGlob } from "node:path";
-import { pathToFileURL } from "node:url";
 import { BastionError, main } from "./lib/errors.ts";
 import { run } from "./lib/exec.ts";
 import { parseJavaMajor } from "./lib/java.ts";
@@ -281,7 +280,7 @@ export function formatFinding(f: Finding): string {
     return `${MARK[f.level]} ${f.message}${f.docs ? `\n    docs: ${f.docs}` : ""}`;
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
+if (import.meta.main) {
     main(async () => {
         const findings = await runDoctor(repoRoot());
         for (const f of findings) console.log(formatFinding(f));

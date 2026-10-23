@@ -1,6 +1,5 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { pathToFileURL } from "node:url";
 import { promoteUnreleased, validateRelease } from "./lib/changelog.ts";
 import { BastionError, main } from "./lib/errors.ts";
 import { run, type RunResult } from "./lib/exec.ts";
@@ -104,7 +103,7 @@ export async function release(
     console.log(`Released ${version}; CI will build and publish from the tag.`);
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
+if (import.meta.main) {
     main(async () => {
         const version = process.argv[2];
         if (!version) {
