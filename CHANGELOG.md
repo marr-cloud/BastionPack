@@ -6,6 +6,7 @@ All notable changes to this modpack are documented here. The format follows [Kee
 
 ### Added
 
+- BastionPack icon (original pixel art): README logo and default `kubejs/config/packicon.png`, with its Aseprite source in `docs/assets/`.
 - Crash Assistant ships configured for the pack: `task init` asks for creator nicknames and a help link, and `task doctor` warns while they are still `CHANGE_ME`.
 
 ### Changed
@@ -26,5 +27,7 @@ All notable changes to this modpack are documented here. The format follows [Kee
 ## [0.1.0] - 2026-10-23
 
 ### Added
+
+- BastionPack icon (original pixel art): README logo and default `kubejs/config/packicon.png`, with its Aseprite source in `docs/assets/`.
 
 - First release of the BastionPack template: Minecraft 1.21.1 NeoForge base pack with performance mods, KubeJS + ProbeJS, JEI, Jade, Crash Assistant and spark.
