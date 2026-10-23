@@ -4,13 +4,13 @@ Use this when git reports a conflict in `pakku-lock.json`. Pakku has no command 
 
 ## Steps
 
-1. Take the **target branch's** lock:
+1. Take the **target branch's** lock (correct for both merge and rebase):
 
     ```sh
-    git checkout --ours pakku-lock.json
+    git checkout origin/main -- pakku-lock.json
     ```
 
-    (During a rebase "ours" is the branch you are rebasing onto. If unsure, `git checkout origin/main -- pakku-lock.json`.)
+    Do not use `git checkout --ours`: in a `git merge main` on a feature branch "ours" is the feature branch, so main's lock changes (such as the weekly bot updates) would be dropped. Only in a rebase is "ours" the branch you are rebasing onto.
 
 2. Re-apply your changes with the tasks, never by editing the JSON:
 

@@ -16,7 +16,7 @@ Pakku derives each mod's `side` from Modrinth metadata and gets it wrong for som
     }
     ```
 
-2. Merge that into `projects` in `pakku.json` (keep existing entries). Or run `pakku cfg prj -s BOTH <slug>` from `java -jar pakku.jar` (the flag goes before the slug).
+2. Merge that into `projects` in `pakku.json` (keep existing entries). Or run `java -jar pakku.jar cfg prj -s BOTH <slug>` (the flag goes before the slug).
 3. Rebuild: `task build`.
 
 Explicit overrides on mods Modrinth tags as both-sides are intentional and are not flagged. `export_server_side_projects_to_client` is `false` by default and Pakku does not write default values to `pakku.json`.

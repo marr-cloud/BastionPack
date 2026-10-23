@@ -24,7 +24,7 @@ task server:up
 task server:logs
 ```
 
-`task server:up` builds a dev pack and starts both containers. `SERVER_USE_ENV_PACK=true task server:up` skips the build and uses `MODRINTH_MODPACK` from `server/.env` instead (a `/modpacks/<file>.mrpack` path, or a published Modrinth slug with `MODRINTH_VERSION`). Friends join through the playit address.
+`task server:up` builds a dev pack and starts both containers. `task server:up SERVER_USE_ENV_PACK=true` skips the build and uses `MODRINTH_MODPACK` from `server/.env` instead (a `/modpacks/<file>.mrpack` path, or a published Modrinth slug with `MODRINTH_VERSION`). Friends join through the playit address.
 
 Other commands:
 

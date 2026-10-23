@@ -44,4 +44,4 @@ Prefer the `task` wrappers (`task mods:add` etc.). Call Pakku directly with `jav
 
 ## Verify it worked
 
-`task doctor` confirms `pakku.jar` matches the pinned 1.5.0 checksum, and `task setup` reports `pakku 1.5.0`: ok.
+`task doctor` confirms `pakku.jar` matches the pinned 1.5.0 checksum, and `task setup` prints `pakku 1.5.0: present` (or `downloaded` the first time).
