@@ -34,7 +34,7 @@ Pakku issue #141: `!` exclusions in `client_overrides`/`server_overrides` do not
 | File           | Purpose                                                                          |
 | -------------- | -------------------------------------------------------------------------------- |
 | `Taskfile.yml` | Task definitions and the pinned `PAKKU_VERSION` / `PAKKU_SHA256`.                |
-| `mise.toml`    | Pinned Java 21, Node 24, pnpm, Task.                                             |
+| `mise.toml`    | Pinned Java 21, Node 26, pnpm, Task.                                             |
 | `server/.env`  | Local server settings (gitignored, copy of `server/.env.example`).               |
 | `.env`         | Local publish credentials (gitignored): `MODRINTH_TOKEN`, `MODRINTH_PROJECT_ID`. |
 | `CHANGELOG.md` | Keep a Changelog format; releases promote `## [Unreleased]`.                     |

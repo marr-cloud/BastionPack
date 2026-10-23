@@ -26,8 +26,8 @@ Each entry is symptom, cause, fix.
 
 ### Node version
 
-- Symptom: `Node 24+ required`.
-- Cause: the scripts run TypeScript directly through Node 24.
+- Symptom: `Node 26+ required`.
+- Cause: the scripts run TypeScript directly through Node 26.
 - Fix: `mise install`, new terminal, `task doctor`.
 
 ### Setup env

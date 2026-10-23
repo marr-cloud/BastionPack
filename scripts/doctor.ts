@@ -139,11 +139,11 @@ async function toolChecks(root: string): Promise<Finding[]> {
     );
     const node = Number(process.versions.node.split(".")[0]);
     out.push(
-        node >= 24
+        node >= 26
             ? { level: "ok", message: `Node ${process.versions.node}` }
             : {
                   level: "error",
-                  message: `Node 24+ required (found ${process.versions.node}); run \`mise install\``,
+                  message: `Node 26+ required (found ${process.versions.node}); run \`mise install\``,
                   docs: `${TS}#node-version`,
               },
     );
