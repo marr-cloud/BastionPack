@@ -4,6 +4,16 @@ All notable changes to this modpack are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Changed
+
+- Tooling runtime moved to Node 26. Dev builds are now versioned `<tag>+dev.<sha>`.
+
+### Fixed
+
+- Scripts no longer silently do nothing when the repo is reached through a symlink or junction.
+- `task setup` now installs npm dependencies; `task release` rejects extra arguments; stalled Pakku downloads time out.
+- `task server:up` always recreates the container and resyncs the local pack.
+
 ## [0.1.0] - 2026-10-23
 
 ### Added
