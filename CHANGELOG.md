@@ -4,6 +4,8 @@ All notable changes to this modpack are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-10-23
+
 ### Added
 
 - Local server: optional `AUTH_SERVER` in `server/.env` (for example `ely.by`) runs the server with a pinned authlib-injector so Ely.by and other Yggdrasil accounts can join.
