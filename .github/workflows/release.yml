@@ -131,7 +131,7 @@ jobs:
 
             - name: Upload to CurseForge
               if: ${{ steps.curseforge.outputs.zip != '' }}
-              uses: Xikaro/upload-curseforge-modpack-action@1.1.0
+              uses: Xikaro/upload-curseforge-modpack-action@1.1.1
               with:
                   api-token: ${{ secrets.CURSEFORGE_TOKEN }}
                   project-id: ${{ vars.CURSEFORGE_ID }}
