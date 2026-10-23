@@ -64,6 +64,17 @@ export async function build(opts: {
     const dispose = restoreOnSignal(configFile, original);
     let failure: unknown;
     try {
+        // Export hashes GitHub-hosted mods from their downloaded jars and silently drops
+        // the ones it cannot find, so make sure every file in the lock is present first.
+        const fetched = await runPakku(["fetch"], { cwd: opts.root, inherit: true });
+        if (fetched.code !== 0) {
+            throw new BastionError(`pakku fetch failed (exit ${fetched.code})`, {
+                hint:
+                    fetched.stderr.trim() ||
+                    "see the Pakku output above; check your connection and run `task setup`",
+                docs: EXPORT_DOCS,
+            });
+        }
         const cfg = await runPakku(["cfg", "-v", opts.version], { cwd: opts.root });
         if (cfg.code !== 0) {
             throw new BastionError(`pakku cfg -v ${opts.version} failed (exit ${cfg.code})`, {

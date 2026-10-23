@@ -127,7 +127,7 @@ Each entry is symptom, cause, fix.
 ### Export failed
 
 - Symptom: `pakku … failed` during build, or `pakku export finished but produced no .mrpack`.
-- Cause: Pakku could not export (bad `pakku.json`, missing files, network).
+- Cause: Pakku could not fetch or export (bad `pakku.json`, missing files, network). `task build` runs `pakku fetch` first, because export silently drops GitHub-hosted mods whose jars were never downloaded.
 - Fix: read the Pakku output above the error, run `task doctor`, then `task build`.
 
 ### Version detect

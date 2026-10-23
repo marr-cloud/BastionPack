@@ -53,8 +53,8 @@ test("build returns the mrpack path from a root with spaces and apostrophes", as
     const out = await build({ root, version: "1.0.0", serverpack: false, pakkuRunner: r });
     assert.equal(out.mrpack, join(root, "build", "modrinth", "x.mrpack"));
     assert.equal(out.serverpack, undefined);
-    assert.deepEqual(calls[0], ["cfg", "-v", "1.0.0"]);
-    assert.ok(calls[1]?.includes("--no-server"));
+    assert.deepEqual(calls[1], ["cfg", "-v", "1.0.0"]);
+    assert.ok(calls[2]?.includes("--no-server"));
     assert.equal(readFileSync(join(root, "pakku.json"), "utf8"), original);
 });
 
@@ -80,7 +80,7 @@ test("build with serverpack omits --no-server and returns the zip", async () => 
     const r = runner(() => writeOut("modrinth/x.mrpack", "serverpack/s.zip"), calls);
     const out = await build({ root, version: "1.0.0", serverpack: true, pakkuRunner: r });
     assert.equal(out.serverpack, join(root, "build", "serverpack", "s.zip"));
-    assert.ok(!calls[1]?.includes("--no-server"));
+    assert.ok(!calls.find((a) => a[0] === "export")?.includes("--no-server"));
 });
 
 test("signal handler restores the original bytes and exits with the conventional code", () => {
@@ -134,4 +134,27 @@ test("build fails when the serverpack is requested but missing", async () => {
         build({ root, version: "1.0.0", serverpack: true, pakkuRunner: r }),
         /serverpack/i,
     );
+});
+
+// Pakku hashes GitHub-hosted mods from the downloaded jar; without a fetch first, export
+// silently drops them from the .mrpack (Pakku issue #157).
+test("build fetches mods before exporting", async () => {
+    const calls: string[][] = [];
+    const r = runner(() => writeOut("modrinth/x.mrpack"), calls);
+    await build({ root, version: "1.0.0", serverpack: false, pakkuRunner: r });
+    const fetchAt = calls.findIndex((a) => a[0] === "fetch");
+    const exportAt = calls.findIndex((a) => a[0] === "export");
+    assert.ok(fetchAt !== -1 && fetchAt < exportAt);
+});
+
+test("build stops with a clear error when the fetch fails", async () => {
+    const r: typeof pakku = async (args) =>
+        args[0] === "fetch"
+            ? { code: 1, stdout: "", stderr: "offline" }
+            : { code: 0, stdout: "", stderr: "" };
+    await assert.rejects(
+        build({ root, version: "1.0.0", serverpack: false, pakkuRunner: r }),
+        (e: unknown) => e instanceof BastionError && /pakku fetch failed/.test(e.message),
+    );
+    assert.equal(readFileSync(join(root, "pakku.json"), "utf8"), original);
 });
