@@ -324,6 +324,43 @@
             ]
         },
         {
+            "pakku_id": "dOv7PWeS93cMAnTX",
+            "type": "MOD",
+            "side": "BOTH",
+            "slug": {
+                "modrinth": "lithium"
+            },
+            "name": {
+                "modrinth": "Lithium"
+            },
+            "id": {
+                "modrinth": "gvQqBUqZ"
+            },
+            "files": [
+                {
+                    "type": "modrinth",
+                    "file_name": "lithium-neoforge-0.15.4+mc1.21.1.jar",
+                    "mc_versions": [
+                        "1.21.1"
+                    ],
+                    "loaders": [
+                        "neoforge"
+                    ],
+                    "release_type": "release",
+                    "url": "https://cdn.modrinth.com/data/gvQqBUqZ/versions/DDUrRVCA/lithium-neoforge-0.15.4+mc1.21.1.jar",
+                    "id": "DDUrRVCA",
+                    "parent_id": "gvQqBUqZ",
+                    "hashes": {
+                        "sha512": "2735da2088b88a8bdcd4ad02a2b6fffbfd3925557cefd4fa54b5477dfb9e582ea7f521300c060f57dff1325dd21bff276b7333363ad3371ed6893e3de9eca9cd",
+                        "sha1": "97212e45c963730bbfc7c44780df99317814c21b"
+                    },
+                    "required_dependencies": [],
+                    "size": 774220,
+                    "date_published": "2026-06-27T17:11:51.285886Z"
+                }
+            ]
+        },
+        {
             "pakku_id": "zuh5ZFdwfFTb870m",
             "type": "MOD",
             "side": "BOTH",
@@ -394,44 +431,6 @@
                     "required_dependencies": [],
                     "size": 611043,
                     "date_published": "2026-10-08T20:28:04.556303Z"
-                }
-            ]
-        },
-        {
-            "pakku_id": "Oh4yAg0KFTeNeUSP",
-            "type": "MOD",
-            "side": "SERVER",
-            "slug": {
-                "modrinth": "noisium"
-            },
-            "name": {
-                "modrinth": "Noisium"
-            },
-            "id": {
-                "modrinth": "KuNKN7d2"
-            },
-            "files": [
-                {
-                    "type": "modrinth",
-                    "file_name": "noisium-neoforge-2.3.0+mc1.21-1.21.1.jar",
-                    "mc_versions": [
-                        "1.21",
-                        "1.21.1"
-                    ],
-                    "loaders": [
-                        "neoforge"
-                    ],
-                    "release_type": "release",
-                    "url": "https://cdn.modrinth.com/data/KuNKN7d2/versions/nJBE6tif/noisium-neoforge-2.3.0+mc1.21-1.21.1.jar",
-                    "id": "nJBE6tif",
-                    "parent_id": "KuNKN7d2",
-                    "hashes": {
-                        "sha512": "b50c37d2f69d51742d4407d272cea525b428784d2a39338d34b692937320495cd77d47b2d2321b3976713447028f50823e9ba44ca618900eba4ced907985ec84",
-                        "sha1": "1bea6b61378ba80f038256c4345d9ff3b67928c4"
-                    },
-                    "required_dependencies": [],
-                    "size": 60296,
-                    "date_published": "2024-08-21T17:24:16.092924Z"
                 }
             ]
         },

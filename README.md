@@ -16,7 +16,7 @@ BastionPack is derived from [PanPack](https://github.com/ThePansmith/PanPack) by
 - **Server smoke test** in CI: a real `itzg/minecraft-server` boots the built pack before anything is published.
 - **Weekly mod-update PR** with a readable diff and the smoke-test result.
 - **Local server** with Docker and playit.gg: `task server:up`.
-- **Batteries included**: Sodium, ModernFix, FerriteCore, ImmediatelyFast, EntityCulling, Noisium, KubeJS, JEI, Jade and more.
+- **Batteries included**: Sodium, ModernFix, FerriteCore, ImmediatelyFast, EntityCulling, Lithium, KubeJS, JEI, Jade and more.
 
 ## 5-minute start
 
@@ -35,7 +35,7 @@ Then, in your GitHub repository, tick Settings, Actions, General, **Allow GitHub
 
 - [Getting started](docs/getting-started.md), [Concepts](docs/concepts.md), [For players](docs/players.md)
 - [Troubleshooting](docs/troubleshooting.md): every script error links here
-- Guides in [docs/guides/](docs/guides/): [wrong mod side](docs/guides/wrong-mod-side.md), [mod not on Modrinth](docs/guides/mod-not-on-modrinth.md), [local server](docs/guides/local-server-docker.md), [first Modrinth release](docs/guides/first-modrinth-release.md), [KubeJS](docs/guides/kubejs-recipes-and-optional-compat.md), [performance](docs/guides/performance-low-end.md)
+- Guides in [docs/guides/](docs/guides/): [wrong mod side](docs/guides/wrong-mod-side.md), [mod not on Modrinth](docs/guides/mod-not-on-modrinth.md), [local server](docs/guides/local-server-docker.md), [first Modrinth release](docs/guides/first-modrinth-release.md), [KubeJS](docs/guides/kubejs-recipes-and-optional-compat.md), [performance](docs/guides/performance-low-end.md), [switching to EMI](docs/guides/switching-to-emi.md)
 - Reference: [tasks](docs/reference/tasks.md), [workflows](docs/reference/workflows.md), [configuration](docs/reference/configuration.md), [Pakku](docs/reference/pakku.md)
 - AI agents: [AGENTS.md](AGENTS.md). Contributors: [CONTRIBUTING.md](CONTRIBUTING.md)
 
