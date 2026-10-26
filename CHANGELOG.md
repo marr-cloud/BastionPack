@@ -4,6 +4,8 @@ All notable changes to this modpack are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-26
+
 ### Added
 
 - Guide for switching the recipe viewer to EMI (keeping JEI so mods' JEI plugins still show).
