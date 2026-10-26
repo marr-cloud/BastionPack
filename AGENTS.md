@@ -42,7 +42,7 @@ Run `task --list` for the live list. Details: `docs/reference/tasks.md`.
 - `README.md`: what it is, 5-minute start, credits.
 - `docs/getting-started.md`, `docs/concepts.md`, `docs/players.md`
 - `docs/troubleshooting.md`: symptom, cause, fix; every script error links here.
-- `docs/guides/`: one task per page (wrong mod side, CF-only mods, server, releases, KubeJS, performance).
+- `docs/guides/`: one task per page (wrong mod side, CF-only mods, server, releases, KubeJS, performance, EMI).
 - `docs/reference/`: `tasks.md`, `workflows.md`, `configuration.md`, `pakku.md`.
 - **Pakku is not in Context7.** Use `docs/reference/pakku.md` (condensed) or https://juraj-hrivnak.github.io/Pakku/.
 - `docs/superpowers/` holds design history and is removed by `task init` in packs.

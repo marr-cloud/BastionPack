@@ -4,6 +4,16 @@ All notable changes to this modpack are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+
+- Guide for switching the recipe viewer to EMI (keeping JEI so mods' JEI plugins still show).
+- Performance guide: optional ModernFix and ImmediatelyFast tweaks, garbage collector advice, and per-pack mods (More Culling, C2ME, Iris, LambDynamicLights).
+
+### Changed
+
+- Lithium replaces Noisium in the base modset: Noisium is rated a negligible improvement by the MC Optimization Guide and is no longer updated.
+- Refreshed BastionPack icon (one row shorter, better centered).
+
 ## [0.2.1] - 2026-10-23
 
 ### Added
