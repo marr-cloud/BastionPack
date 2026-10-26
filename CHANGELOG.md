@@ -8,6 +8,7 @@ All notable changes to this modpack are documented here. The format follows [Kee
 
 - Packs made from the template no longer fail `task test` right after `task init`: the init tests use the template's own files as fixtures and now skip once the repo is initialized. CI also initializes a copy of the template and runs its checks and tests.
 - `task init` names the local server's Docker Compose project after the pack (it was `bastionpack` in every pack, so two packs on one PC shared a project and the same world volume).
+- Server-only mods (side `SERVER`, for example worldgen mods) are now in the `.mrpack`, marked server-only. `task build` used `pakku export --no-server`, which also dropped them, so a server installed from the `.mrpack` (the local Docker server, the CI smoke test) never had them.
 
 ## [0.3.0] - 2026-10-26
 
