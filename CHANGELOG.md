@@ -4,6 +4,10 @@ All notable changes to this modpack are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Fixed
+
+- Packs made from the template no longer fail `task test` right after `task init`: the init tests use the template's own files as fixtures and now skip once the repo is initialized. CI also initializes a copy of the template and runs its checks and tests.
+
 ## [0.3.0] - 2026-10-26
 
 ### Added
