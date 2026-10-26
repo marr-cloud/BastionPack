@@ -28,7 +28,7 @@ task setup
 task init
 ```
 
-It asks for the pack name, author, description, Modrinth slug, the Minecraft nicknames of the pack creators and a help link for Crash Assistant (it defaults to your GitHub issues page), then updates `pakku.json` and the Prism instance name, resets `CHANGELOG.md`, replaces this template README with a short pack README, and removes `docs/superpowers/`. Pass flags to skip the prompts (see `task --list`).
+It asks for the pack name, author, description, Modrinth slug, the Minecraft nicknames of the pack creators and a help link for Crash Assistant (it defaults to your GitHub issues page), then updates `pakku.json` and the Prism instance name, names the local server's Docker project after the pack, resets `CHANGELOG.md`, replaces this template README with a short pack README, and removes `docs/superpowers/`. Pass flags to skip the prompts (see `task --list`).
 
 Crash Assistant's reference mod list, `config/crash_assistant/modlist.json`, appears after a creator first launches the game. Commit it: crash reports diff the player's mods against it to show what they added or removed.
 

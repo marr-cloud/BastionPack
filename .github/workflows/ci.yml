@@ -39,6 +39,18 @@ jobs:
 
             - run: task test
 
+            # Template only (packs no longer have docs/superpowers): a pack fresh from `task init`
+            # must pass its own checks and tests.
+            - name: Initialized pack passes check and test
+              if: ${{ hashFiles('docs/superpowers/**') != '' }}
+              run: |
+                  pack="$RUNNER_TEMP/pack"
+                  cp -r . "$pack"
+                  cd "$pack"
+                  node scripts/init.ts --name "Self Test Pack" --author ci --description "CI self-test" --modrinth-slug self-test-pack --creators ci_bot --help-link https://example.com/issues
+                  task check
+                  task test
+
             - run: task build
 
             - name: Upload .mrpack
