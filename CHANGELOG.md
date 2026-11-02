@@ -4,6 +4,10 @@ All notable changes to this modpack are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Changed
+
+- The local server uses playit agent 1.2.0 (was 1.0.8): plain logs in `docker logs` and a clean `docker stop`. Dependabot now also opens PRs for the pinned Docker images in `server/compose.yaml`.
+
 ### Fixed
 
 - Packs made from the template no longer fail `task test` right after `task init`: the init tests use the template's own files as fixtures and now skip once the repo is initialized. CI also initializes a copy of the template and runs its checks and tests.
