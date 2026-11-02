@@ -2,7 +2,7 @@
 
 Use this when you want to host the pack for friends from your own PC using Docker and playit.gg.
 
-`server/compose.yaml` runs `itzg/minecraft-server:java21` (it installs the pack from the same `.mrpack` friends use) and the playit.gg agent `ghcr.io/playit-cloud/playit-agent:1.0.8`.
+`server/compose.yaml` runs `itzg/minecraft-server:java21` (it installs the pack from the same `.mrpack` friends use) and the playit.gg agent `ghcr.io/playit-cloud/playit-agent:1.2.0`. Dependabot opens a weekly PR when a newer playit agent image is published; `java21` is a moving tag that follows itzg releases, so `task server:update` pulls it.
 
 ## Setup
 
